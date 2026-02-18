@@ -1,70 +1,63 @@
-# import pygame module
 import pygame
-
-# import sys library
 import sys
 
-# initializing pygame
 pygame.init()
-
 clock = pygame.time.Clock()
 
-# Set the window screen size
-display_screen = pygame.display.set_mode((500, 500))
-
-# add font style and size
-base_font = pygame.font.Font(None, 40)
+screen = pygame.display.set_mode((600, 400))
+pygame.display.set_caption("Balon na lajně")
 
 
-# stores text taken by keyboard
-user_text = ''
+line_y = 300
+line_start = 100
+line_end = 500
 
-# set left, top, width, height in 
-# Pygame.Rect()
-input_rect = pygame.Rect(200, 200, 140, 32)
-color_active = pygame.Color("lightskyblue")
-color_passive = pygame.Color("gray15")
-color = color_passive
 
-active = False
+balloon_img = pygame.image.load("balon.jpg").convert_alpha()
+balloon_img = pygame.transform.scale(balloon_img, (80, 80))
+
+width = balloon_img.get_width()
+height = balloon_img.get_height()
+
+
+x = line_start + width // 2
+speed = 4
+direction = 1   # 1 = doprava, -1 = doleva
+angle = 0
 
 while True:
-    
+    clock.tick(60)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
 
-        # when mouse collides with the rectangle
-        # make active as true
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if input_rect.collidepoint(event.pos):
-                active = True
-            else:
-                active=False
+    # pohyb
+    x += speed * direction
 
-        # if the key is physically pressed down
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_BACKSPACE:
-                
-                # stores text except last letter
-                user_text = user_text[0:-1]
-            else:
-                if active==True:
-                    user_text += event.unicode
+    # rotace podle směru
+    angle -= speed * direction * 2
 
-    display_screen.fill((0, 0, 0))
+    # otočení na krajích
+    if x >= line_end - width // 2:
+        direction = -1
+    if x <= line_start + width // 2:
+        direction = 1
 
-    if active:
-        color = color_active
-    else:
-        color = color_passive
+    screen.fill((30, 30, 30))
 
-    pygame.draw.rect(display_screen, color, input_rect)
-    
-    # render the text
-    text_surface = base_font.render(user_text, True, (255, 255, 255))
-    display_screen.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
-    input_rect.w = max(100, text_surface.get_width() + 10)
+    # čára
+    pygame.draw.line(screen, (255, 255, 255),
+                     (line_start, line_y),
+                     (line_end, line_y), 5)
+
+    # rotace obrázku
+    rotated_img = pygame.transform.rotate(balloon_img, angle)
+    rect = rotated_img.get_rect(
+        center=(x, line_y - height // 2)  # přesně na čáře
+    )
+
+    screen.blit(rotated_img, rect)
+
     pygame.display.flip()
-    clock.tick(60)
