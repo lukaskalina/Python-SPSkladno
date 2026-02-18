@@ -1,59 +1,70 @@
-# Importing pygame module
+# import pygame module
 import pygame
-from pygame.locals import *
 
-# initiate pygame and give permission
-# to use pygame's functionality.
+# import sys library
+import sys
+
+# initializing pygame
 pygame.init()
 
-# create the display surface object
-# of specific dimension.
-window = pygame.display.set_mode((600, 600))
+clock = pygame.time.Clock()
 
-# Fill the scree with white color
-window.fill((255, 255, 255))
+# Set the window screen size
+display_screen = pygame.display.set_mode((500, 500))
 
-# creating list in which we will store
-# the position of the circle
-circle_positions = []
+# add font style and size
+base_font = pygame.font.Font(None, 40)
 
-# radius of the circle
-circle_radius = 60
 
-# Color of the circle
-color = (0, 0, 255)
+# stores text taken by keyboard
+user_text = ''
 
-# Creating a variable which we will use
-# to run the while loop
-run = True
+# set left, top, width, height in 
+# Pygame.Rect()
+input_rect = pygame.Rect(200, 200, 140, 32)
+color_active = pygame.Color("lightskyblue")
+color_passive = pygame.Color("gray15")
+color = color_passive
 
-# Creating a while loop
-while run:
+active = False
 
-    # Iterating over all the events received from
-    # pygame.event.get()
+while True:
+    
     for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
 
-        # If the type of the event is quit
-        # then setting the run variable to false
-        if event.type == QUIT:
-            run = False
+        # when mouse collides with the rectangle
+        # make active as true
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if input_rect.collidepoint(event.pos):
+                active = True
+            else:
+                active=False
 
-        # if the type of the event is MOUSEBUTTONDOWN
-        # then storing the current position
-        elif event.type == MOUSEBUTTONDOWN:
-            position = event.pos
-            circle_positions.append(position)
-            
-    # Using for loop to iterate
-    # over the circle_positions
-    # list
-    if len(circle_positions) % 3 == 0:
-        
-        for i in range(0, len(circle_positions), 3):
-            left_corner = circle_positions[i]
-            right_corner = circle_positions[i + 1]
-            pygame.draw.polygon(window, color, (left_corner, right_corner, circle_positions[i + 2]))
+        # if the key is physically pressed down
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_BACKSPACE:
+                
+                # stores text except last letter
+                user_text = user_text[0:-1]
+            else:
+                if active==True:
+                    user_text += event.unicode
 
-    # Draws the surface object to the screen.
-    pygame.display.update()
+    display_screen.fill((0, 0, 0))
+
+    if active:
+        color = color_active
+    else:
+        color = color_passive
+
+    pygame.draw.rect(display_screen, color, input_rect)
+    
+    # render the text
+    text_surface = base_font.render(user_text, True, (255, 255, 255))
+    display_screen.blit(text_surface, (input_rect.x + 5, input_rect.y + 5))
+    input_rect.w = max(100, text_surface.get_width() + 10)
+    pygame.display.flip()
+    clock.tick(60)
