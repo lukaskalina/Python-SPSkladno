@@ -1,0 +1,63 @@
+import pygame
+import sys
+
+pygame.init()
+clock = pygame.time.Clock()
+
+screen = pygame.display.set_mode((600, 400))
+pygame.display.set_caption("Balon na lajnì")
+
+
+line_y = 300
+line_start = 0
+line_end = 600
+
+
+balloon_img = pygame.image.load("balon.jpg").convert_alpha()
+balloon_img = pygame.transform.scale(balloon_img, (80, 80))
+
+width = balloon_img.get_width()
+height = balloon_img.get_height()
+
+
+x = line_start + width // 2
+speed = 2
+direction = 1   # 1 = doprava, -1 = doleva
+angle = 0
+
+while True:
+    clock.tick(60)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()
+
+    # pohyb
+    x += speed * direction
+
+    # rotace podle smìru
+    angle -= speed * direction * 2
+
+    # otoèení na krajích
+    if x >= line_end - width // 2:
+        direction = -1
+    if x <= line_start + width // 2:
+        direction = 1
+
+    screen.fill((30, 30, 30))
+
+    # èára
+    pygame.draw.line(screen, (255, 255, 255),
+                     (line_start, line_y),
+                     (line_end, line_y), 5)
+
+    # rotace obrázku
+    rotated_img = pygame.transform.rotate(balloon_img, angle)
+    rect = rotated_img.get_rect(
+        center=(x, line_y - height // 2)  # pøesnì na èáøe
+    )
+
+    screen.blit(rotated_img, rect)
+
+    pygame.display.flip()

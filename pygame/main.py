@@ -1,63 +1,77 @@
-import pygame
-import sys
+import pygame 
+pygame.init() 
 
-pygame.init()
-clock = pygame.time.Clock()
+win = pygame.display.set_mode((500, 500)) 
+pygame.display.set_caption("Moving rectangle") 
 
-screen = pygame.display.set_mode((600, 400))
-pygame.display.set_caption("Balon na lajně")
+x = 200
+y = 200
 
+width = 20
+height = 20
 
-line_y = 300
-line_start = 100
-line_end = 500
+isjump = False
+v = 5
+m = 1
 
+vel = 10
+run = True
 
-balloon_img = pygame.image.load("balon.jpg").convert_alpha()
-balloon_img = pygame.transform.scale(balloon_img, (80, 80))
+# infinite loop 
+while run: 
+	
+	pygame.time.delay(10)
+	
+	for event in pygame.event.get(): 
+		if event.type == pygame.QUIT: 
+			run = False
+	keys = pygame.key.get_pressed() 
+	
+	if keys[pygame.K_LEFT] and x>0: 
+		x -= vel 
+		
+	if keys[pygame.K_RIGHT] and x<500-width: 
+		x += vel 
+		
+	if keys[pygame.K_UP] and y>0: 
+		y -= vel 
+		
+	if keys[pygame.K_DOWN] and y<500-height:
+		y += vel
+	if isjump == False:
+		if keys[pygame.K_SPACE]:
+			isjump = True			
+	if isjump :
+		# calculate force (F). F = 1 / 2 * mass * velocity ^ 2.
+		F =(1 / 2)*m*(v**2)
+		 
+		# change in the y co-ordinate
+		y-= F
+		 
+		# decreasing velocity while going up and become negative while coming down
+		v = v-1
+		 
+		# object reached its maximum height
+		if v<0:
+			 
+			# negative sign is added to counter negative velocity
+			m =-1
+ 
+		# objected reaches its original state
+		if v ==-6:
+ 
+			# making isjump equal to false 
+			isjump = False
 
-width = balloon_img.get_width()
-height = balloon_img.get_height()
+   
+			# setting original values to v and m
+			v = 5
+			m = 1
+	 
+	# creates time delay of 10ms
 
-
-x = line_start + width // 2
-speed = 4
-direction = 1   # 1 = doprava, -1 = doleva
-angle = 0
-
-while True:
-    clock.tick(60)
-
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-
-    # pohyb
-    x += speed * direction
-
-    # rotace podle směru
-    angle -= speed * direction * 2
-
-    # otočení na krajích
-    if x >= line_end - width // 2:
-        direction = -1
-    if x <= line_start + width // 2:
-        direction = 1
-
-    screen.fill((30, 30, 30))
-
-    # čára
-    pygame.draw.line(screen, (255, 255, 255),
-                     (line_start, line_y),
-                     (line_end, line_y), 5)
-
-    # rotace obrázku
-    rotated_img = pygame.transform.rotate(balloon_img, angle)
-    rect = rotated_img.get_rect(
-        center=(x, line_y - height // 2)  # přesně na čáře
-    )
-
-    screen.blit(rotated_img, rect)
-
-    pygame.display.flip()
+	win.fill((0, 0, 0))
+	pygame.draw.rect(win, (255, 0, 0), (x, y, width, height))
+	pygame.display.update()
+	
+		# it refreshes the window
