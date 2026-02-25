@@ -67,6 +67,8 @@ while run:
 			# setting original values to v and m
 			v = 5
 			m = 1
+
+			
 	 
 	# creates time delay of 10ms
 
