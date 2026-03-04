@@ -11,11 +11,11 @@ clock = pygame.time.Clock()
 player = Player(WIDTH // 2,HEIGHT)
 player_group = pygame.sprite.Group()
 player_group.add(player)
-asteroid = Asteroid(WIDTH // 2,0)
+asteroid = Asteroid()
 asteroid_group = pygame.sprite.Group()
 asteroid_group.add(asteroid)
 while running:
-    screen.fill((255, 0, 0))
+    screen.fill((0, 0, 0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -23,7 +23,10 @@ while running:
     player_group.update()
     player_group.draw(screen)
     asteroid_group.update()
-    asteroid_group.update(screen)
+    asteroid_group.draw(screen)
+
+    if pygame.sprite.spritecollide(player, asteroid_group, True, pygame.sprite.collide_mask):
+        print("KOLIZE!!")
 
     clock.tick(60)
     pygame.display.update()
