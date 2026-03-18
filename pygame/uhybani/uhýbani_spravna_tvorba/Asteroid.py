@@ -12,8 +12,9 @@ class Asteroid(pygame.sprite.Sprite):
         self.speed = BLOCK_SPEED
     def update(self):
         self.rect.y += self.speed
-        if self.rect.top > HEIGHT:
-            self.rect.bottom  = 0
+        if self.rect.top > HEIGHT+100:
+            self.kill()
+
             x = random.randrange(0+ (BLOCK_WIDTH // 2) , WIDTH - (BLOCK_WIDTH // 2))
             self.rect.centerx = x
 if __name__ == "__main__":
