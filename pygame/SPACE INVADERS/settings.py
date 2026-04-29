@@ -8,10 +8,14 @@ FPS = 60
 #player settings
 PLAYER_WIDTH = 50
 PLAYER_HEIGHT = 50
-PLAYER_SPEED = 1.5
+PLAYER_SPEED = 2
 PLAYER_IMAGE_PATH = "obrázky/spaceship.png"
+PLAYER_BULLET_IMAGE_PATH = "obrázky/bullet.png"
+PLAYER_BULLET_SPEED = 5
 
 ENEMY_DROP_SPEED = 10
 ENEMY_SPEED = 2
 ENEMY_SCALE = 0.76
 ENEMY_IMAGE_PATH = "obrázky/alien{}.png"
+ENEMY_BULLET_IMAGE_PATH = "obrázky/alien_bullet.png"
+ENEMY_BULLET_SPEED = 4
