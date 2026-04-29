@@ -8,12 +8,23 @@ class Enemy(pygame.sprite.Sprite):
         self.image = pygame.image.load(settings.ENEMY_IMAGE_PATH.format(alien_type)).convert_alpha()
         self.image = pygame.transform.scale(self.image, (self.image.get_width()*settings.ENEMY_SCALE,self.image.get_height()*settings.ENEMY_SCALE))
         self.rect = self.image.get_rect(top=y, centerx=x) # center = (x,y)¨
-        self.speed = settings.PLAYER_SPEED
-    
+        self.speed = settings.ENEMY_SPEED
+        self.direction = 1
+        self.counter_for_direction = -100
     def update(self):
-        self.rect.y += self.speed
-        if self.rect.top > HEIGHT:
-            self.kill()
+        if self.direction == 1:
+            self.rect.move_ip(self.speed,0)
+            self.counter_for_direction += 1 
+        else:
+            self.rect.move_ip(-self.speed,0)
+            self.counter_for_direction -= 1 
+        if self.counter_for_direction %100 == 0 and self.counter_for_direction != 0:
+           self.direction *= -1
+           self.rect.move_ip(0, settings.ENEMY_DROP_SPEED) 
+
+        
+
+
 
 if __name__ == "__main__":
     import main

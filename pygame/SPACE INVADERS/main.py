@@ -1,12 +1,14 @@
 import pygame
 import settings
 from Player import Player
-from enemy import Enemy
+from Enemy import Enemy
 
 
 pygame.init()
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
 pygame.display.set_caption("Space Invaders OOP V2")
+clock = pygame.time.Clock()
+
 player = Player()
 player_group = pygame.sprite.Group()
 player_group.add(player)
@@ -18,6 +20,7 @@ enemy_group.add(enemy)
 
 running = True
 while running:
+    clock.tick(settings.FPS)
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
