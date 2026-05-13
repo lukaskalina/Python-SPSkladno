@@ -19,3 +19,17 @@ ENEMY_SCALE = 0.76
 ENEMY_IMAGE_PATH = "obrázky/alien{}.png"
 ENEMY_BULLET_IMAGE_PATH = "obrázky/alien_bullet.png"
 ENEMY_BULLET_SPEED = 4
+
+
+EXPLOSION_IMAGE_PATH = "obrázky/exp{}.png"
+
+BOSS_SCALE = 3
+
+HP_BAR_WIDTH = 200
+HP_BAR_HEIGHT = 20
+
+GREEN = (0,255,0)
+YELLOW =(255,255,0)
+RED =(255,0,0)
+WHITE = (255,255,255)
+BLACK = (0,0,0)

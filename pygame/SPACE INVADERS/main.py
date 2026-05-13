@@ -3,6 +3,9 @@ import settings
 from Player import Player
 from Enemy import Enemy
 from Bullet import Bullet
+from Explosion import Explosion
+from Boss import Boss
+from draw_hp_bar_enemies import draw_hp_bar_enemies
 
 
 pygame.init()
@@ -17,6 +20,7 @@ player_group.add(player)
 enemy_shoot = pygame.USEREVENT + 1
 pygame.time.set_timer(enemy_shoot, 2000)
 
+explosion_group = pygame.sprite.Group()
 player_bullet_group = pygame.sprite.Group()
 enemy_bullet_group = pygame.sprite.Group()
 enemy_group = pygame.sprite.Group()
@@ -31,6 +35,23 @@ def create_enemies():
         y += 50
         x = 75
 create_enemies()
+
+level = 6
+def create_lvl(level):
+    if level > 5:
+        enemy = Boss(150,25)
+        enemy_group.add(enemy)
+    else:
+        x = 75
+        y = 25
+        for i in range(level):
+            for j in range(level*2):
+                enemy = Enemy(x,y)
+                x += 50
+                enemy_group.add(enemy)
+            y += 50
+            x = 75
+create_lvl(level)
 
 
 
@@ -69,6 +90,40 @@ while running:
     player_bullet_group.draw(screen)
     enemy_bullet_group.update()
     enemy_bullet_group.draw(screen)
+    explosion_group.draw(screen)
+    explosion_group.update()
+
+    if pygame.sprite.groupcollide(player_group,enemy_bullet_group, False, True, collided = pygame.sprite.collide_mask):
+        print("Player hit!")
+        running = False
+
+    collided_enemies= pygame.sprite.groupcollide(enemy_group,player_bullet_group, False, True, collided = pygame.sprite.collide_mask)
+    for enemy in collided_enemies:
+        if enemy.hp > 1:
+            enemy.hp -=1
+            print("Enemy hit! HP left:" , enemy.hp)
+        else:
+            explosion = Explosion(enemy.rect.centerx, enemy.rect.centery)
+            explosion_group.add(explosion)
+            enemy.kill()
+            print("Enemy shotted dowm!")
+        if len(enemy_group) == 0:
+            level += 1
+            create_lvl(level)
+        if pygame.sprite.groupcollide(enemy_group,player_group, False, True, collided = pygame.sprite.collide_mask):
+            print("Player hit by enemy!")
+            running = False
+        if level > 5:
+            for enemy in enemy_group:
+                draw_hp_bar_enemies(screen, enemy.hp, enemy.rect.x, enemy.rect.top -10)
+
+
+
+
+
+
+
+
     pygame.display.flip()
 pygame.quit()
 
