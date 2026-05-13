@@ -31,10 +31,12 @@ class Enemy(pygame.sprite.Sprite):
 
     def _check_borders(self):
         if self.rect.right > settings.SCREEN_WIDTH - 50:
+            self.rect.right = settings.SCREEN_WIDTH - 50
             self.counter_for_direction = 100
             self.direction = -1
             self.rect.y += settings.ENEMY_DROP_SPEED
         elif self.rect.left < 50:
+            self.rect.left = 50
             self.counter_for_direction = -100
             self.direction = 1
             self.rect.y += settings.ENEMY_DROP_SPEED

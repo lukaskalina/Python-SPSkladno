@@ -24,22 +24,12 @@ explosion_group = pygame.sprite.Group()
 player_bullet_group = pygame.sprite.Group()
 enemy_bullet_group = pygame.sprite.Group()
 enemy_group = pygame.sprite.Group()
-def create_enemies():
-    x = 75
-    y = 25
-    for i in range(2):
-        for i in range(10):
-            enemy = Enemy(x,y)
-            x += 50
-            enemy_group.add(enemy)
-        y += 50
-        x = 75
-create_enemies()
 
-level = 6
+
+level = 1
 def create_lvl(level):
     if level > 5:
-        enemy = Boss(150,25)
+        enemy = Boss(50,25)
         enemy_group.add(enemy)
     else:
         x = 75
@@ -62,8 +52,8 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
-            if pygame.K_SPACE:
-                if pygame.K_SPACE and player.cooldown == 0:
+           if event.key == pygame.K_SPACE:
+                if player.cooldown == 0:
                     bullet = Bullet(player.rect.left +5 ,player.rect.top +40 ,"Player")
                     player_bullet_group.add(bullet)
                     bullet = Bullet(player.rect.right -5 ,player.rect.top +40,"Player")
